@@ -111,14 +111,15 @@
 - (void)twiceTapping:(UIGestureRecognizer *)getsure {
     if ([getsure isKindOfClass:[UITapGestureRecognizer class]]) {
         UITapGestureRecognizer * tap = (UITapGestureRecognizer *)getsure;
-        _touchX = [tap locationInView:tap.view].x;
-        _touchY = [tap locationInView:tap.view].y;
+        _touchX = [tap locationInView:self.scrollView].x;
+        _touchY = [tap locationInView:self.scrollView].y;
         _isDoubleTapingForZoom = YES;
         if (_currentScale > kMinZoom) {
             [self.scrollView setZoomScale:kMinZoom animated:YES];
             _currentScale = kMinZoom;
         }else{
             [self.scrollView setZoomScale:kMaxZoom animated:YES];
+            NSLog(@"touchX:%f, touchY:%f",_touchX,_touchY);
             _currentScale = kMaxZoom;
         }
     }
@@ -164,6 +165,11 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    NSLog(@"content off set X : %f , Y : %f",scrollView.contentOffset.x,scrollView.contentOffset.y);
 }
 
 #pragma mark - tool

@@ -25,6 +25,8 @@
 
 @property (nonatomic, strong) SNGalleryDatasource * collectionDatasource;
 
+@property (nonatomic, strong) UIPageControl * pageControl;
+
 @end
 
 @implementation SNGalleryBrowserView
@@ -43,6 +45,8 @@
         self.collectionDatasource = [SNGalleryDatasource new];
     }
     self.collectionDatasource.imageUrls = imageUrls;
+    self.pageControl.hidden = imageUrls.count <= 1;
+    self.pageControl.numberOfPages = imageUrls.count > 0 ? imageUrls.count : 0;
 }
 
 #pragma mark - private method
@@ -60,11 +64,20 @@
         
         [self addCloseGesture];
         
+        [self addPageControl];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadForScreenRotate) name:UIDeviceOrientationDidChangeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(photoCellDidZooming:) name:kPhotoCellDidZommingNotification object:nil];
         
     }
     return self;
+}
+
+- (void)addPageControl {
+    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
+    self.pageControl.center = CGPointMake(self.frame.size.width/2.f, self.frame.size.height - 60);
+    self.pageControl.currentPage = _currentIndex;
+    [self addSubview:self.pageControl];
 }
 
 - (void)configCollectionView {
@@ -101,6 +114,7 @@
 
 - (void)setCurrentIndex:(NSUInteger)currentIndex {
     _currentIndex = currentIndex;
+    self.pageControl.currentPage = _currentIndex;
     UICollectionViewCell * cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:_currentIndex inSection:0]];
     if ([cell isKindOfClass:[SNGalleryPhotoCell class]]) {
         SNGalleryPhotoCell * photoCell = (SNGalleryPhotoCell *)cell;
