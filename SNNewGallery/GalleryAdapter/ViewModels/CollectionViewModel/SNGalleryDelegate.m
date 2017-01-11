@@ -55,7 +55,7 @@
 }
 
 - (void)photoCellDidTap {
-    [self.browserView dismissAnimated];
+    [self.browserView dismissAnimatedRect:self.browserView.currentRect];
 }
 
 @end

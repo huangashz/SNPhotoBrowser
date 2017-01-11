@@ -115,6 +115,8 @@
 - (void)setCurrentIndex:(NSUInteger)currentIndex {
     _currentIndex = currentIndex;
     self.pageControl.currentPage = _currentIndex;
+    [self.collectionView setContentOffset:CGPointMake(_currentIndex * _collectionView.frame.size.width, 0)];
+    [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:_currentIndex inSection:0]]];
     UICollectionViewCell * cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:_currentIndex inSection:0]];
     if ([cell isKindOfClass:[SNGalleryPhotoCell class]]) {
         SNGalleryPhotoCell * photoCell = (SNGalleryPhotoCell *)cell;
@@ -158,7 +160,7 @@
         
         //达到拖拽的最大限度 执行消失动画 关闭图集浏览器
         if (translation.y > kDistance) {
-            [self dismissAnimated];
+            [self dismissAnimatedRect:self.currentRect];
             return;
         }
         
@@ -184,10 +186,12 @@
     self.currentPhotoView.transform = CGAffineTransformScale(self.currentPhotoView.transform,scale,scale);
 }
 
-- (void)dismissAnimated {
+- (void)dismissAnimatedRect:(CGRect)endRect {
+    self.currentPhotoView.clipsToBounds = YES;
+    self.currentPhotoView.contentMode = UIViewContentModeScaleAspectFill;
     [UIView animateWithDuration:0.25 animations:^{
         self.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
-        self.currentPhotoView.frame = self.currentRect;
+        self.currentPhotoView.frame = endRect;
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
         [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];

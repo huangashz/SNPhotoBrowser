@@ -174,7 +174,8 @@
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 
     UIImageView * tmpImageView = [[UIImageView alloc] initWithFrame:rect];
-    tmpImageView.contentMode = UIViewContentModeScaleAspectFit;
+    tmpImageView.contentMode = UIViewContentModeScaleAspectFill;
+    tmpImageView.clipsToBounds = YES;
     tmpImageView.image = tempImage;
     
     UIView * tmpBackground = [[UIView alloc] initWithFrame:kScreenRect];

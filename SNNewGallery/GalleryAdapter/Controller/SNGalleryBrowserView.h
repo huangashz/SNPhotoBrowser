@@ -59,7 +59,7 @@
 /**
  关闭图集浏览
  */
-- (void)dismissAnimated ;
+- (void)dismissAnimatedRect:(CGRect)endRect;
 
 /**
  photo zoom的代理
